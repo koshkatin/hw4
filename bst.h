@@ -545,23 +545,25 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
     }
 
     // now node has at most one child
-    Node<Key,Value>* child = node->getLeft() ? node->getLeft() : node->getRight();
+    Node<Key,Value>* child = node->getLeft() ? 
+                             node->getLeft() : node->getRight();
     Node<Key,Value>* parent = node->getParent();
 
     if (child) child->setParent(parent);
 
     if (parent) {
-        if (node == parent->getLeft()) {
-            parent->setLeft(child); 
-        }
-        else {
-            parent->setRight(child);
-        }
+        node == parent->getLeft() ?
+        parent->setLeft(child) :
+        parent->setRight(child);
     }
     else {
         root_ = child;
     }
 
+    node->setLeft(NULL);
+    node->setRight(NULL);
+    node->setParent(NULL);
+    
     delete node;
 }
 
@@ -586,7 +588,7 @@ BinarySearchTree<Key, Value>::predecessor(Node<Key, Value>* current)
     else {  
         Node<Key,Value> *pred = current->getParent();
         // find the first right-child of a parent, pred is the parent 
-        while (pred->getParent() && pred->getParent()->getLeft() == pred) {
+        while (pred->getParent() && pred->getParent()->getLeft() == current) {
             pred = pred->getParent();
         }
         return pred; 
@@ -603,29 +605,24 @@ void BinarySearchTree<Key, Value>::clear()
 {
     // TODO
     if (root_ == NULL) return;
-    
     clearHelper(root_);
+    root_ = NULL;
 }
 
 /**
  * @brief Helper to recursively clear the left and right subtrees
  */
 template<typename Key, typename Value>
-void BinarySearchTree<Key, Value>::clearHelper(Node<Key,Value>* node)
+void BinarySearchTree<Key, Value>::clearHelper(Node<Key, Value>* node)
 {
-    if (node == NULL) {
-        return;
-    }
-    if (node->getLeft()) {
-        clearHelper(node->getLeft());
-        node->setLeft(NULL);
-    }
-    if (node->getRight()) {
-        clearHelper(node->getRight());
-        node->setRight(NULL);
-    }
+    if (!node) return;
+
+    // Recursively clear the left and right subtrees
+    clearHelper(node->getLeft());
+    clearHelper(node->getRight());
+
+    // Delete the current node
     delete node;
-    return;
 }
 
 
