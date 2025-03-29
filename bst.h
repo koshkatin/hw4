@@ -605,11 +605,6 @@ void BinarySearchTree<Key, Value>::clear()
     if (root_ == NULL) return;
     
     clearHelper(root_);
-    // BinarySearchTree<Key,Value>::iterator it;
-    // for (it = begin(); it != end(); it++) {
-    //     (*it)->getParent()->setLeft(NULL);
-    //     delete *it;
-    // }
 }
 
 /**
