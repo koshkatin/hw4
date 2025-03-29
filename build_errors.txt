@@ -1,0 +1,37 @@
+g++ -g -Wall -std=c++11   bst-test.cpp -o bst-test
+In file included from bst-test.cpp:3:
+bst.h: In member function 'virtual void BinarySearchTree<Key, Value>::insert(const std::pair<const _Key, _Tp>&)':
+bst.h:488:1: error: a template declaration cannot appear at block scope
+  488 | template<typename Key,typename Value>
+      | ^~~~~~~~
+bst.h: In member function 'bool BinarySearchTree<Key, Value>::isBalanced() const':
+bst.h:689:10: error: 'root' was not declared in this scope; did you mean 'root_'?
+  689 |     if (!root) return true; // empty tree is balanced
+      |          ^~~~
+      |          root_
+bst.h:690:33: error: 'root' was not declared in this scope; did you mean 'root_'?
+  690 |  int leftHeight = subtreeHeight(root->left);
+      |                                 ^~~~
+      |                                 root_
+bst.h: In instantiation of 'void BinarySearchTree<Key, Value>::insert(const std::pair<const _Key, _Tp>&) [with Key = char; Value = int]':
+bst-test.cpp:13:36:   required from here
+bst.h:481:5: error: no matching function for call to 'BinarySearchTree<char, int>::insertHelper(Node<char, int>*&)'
+  481 |     insertHelper(current);
+      |     ^~~~~~~~~~~~
+bst.h:206:10: note: candidate: 'void BinarySearchTree<Key, Value>::insertHelper(Node<Key, Value>*, const std::pair<const _Key, _Tp>&) [with Key = char; Value = int]'
+  206 |     void insertHelper(Node<Key,Value>* current, const std::pair<const Key, Value> &keyValuePair);
+      |          ^~~~~~~~~~~~
+bst.h:206:10: note:   candidate expects 2 arguments, 1 provided
+bst.h: In instantiation of 'Node<Key, Value>* BinarySearchTree<Key, Value>::internalFind(const Key&) const [with Key = char; Value = int]':
+bst.h:446:30:   required from 'BinarySearchTree<Key, Value>::iterator BinarySearchTree<Key, Value>::find(const Key&) const [with Key = char; Value = int]'
+bst-test.cpp:20:19:   required from here
+bst.h:673:39: error: no 'operator++(int)' declared for postfix '++' [-fpermissive]
+  673 |     for (it = begin(); it != end(); it++) {
+      |                                     ~~^~
+bst.h:674:13: error: base operand of '->' has non-pointer type 'std::pair<const char, int>'
+  674 |         if ((*it)->getKey() == key) {
+      |             ^
+bst.h:675:20: error: cannot convert 'BinarySearchTree<char, int>::iterator' to 'Node<char, int>*' in return
+  675 |             return it; // key found
+      |                    ^~
+make: *** [Makefile:10: bst-test] Error 1
