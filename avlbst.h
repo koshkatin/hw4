@@ -274,7 +274,6 @@ void AVLTree<Key, Value>::insertFix(AVLNode<Key, Value>* p, AVLNode<Key, Value>*
                 n->setBalance(0);
             }
         }
-        //std::cout << "Balancing node: " << g->getKey() << " after inserting: " << n->getKey() << std::endl;
     }       
 }
 
@@ -365,7 +364,7 @@ void AVLTree<Key, Value>::remove(const Key& key)
         // swap remove node with its predecessor if it exists
         AVLNode<Key, Value>* pred = static_cast<AVLNode<Key, Value>*>(
             BinarySearchTree<Key, Value>::predecessor(removeNode));
-        AVLTree<Key, Value>::nodeSwap(removeNode, pred);
+        nodeSwap(removeNode, pred);
     }
 
     AVLNode<Key, Value>* p = removeNode->getParent();
