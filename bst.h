@@ -202,11 +202,6 @@ public:
     void print() const;
     bool empty() const;
 
-    // helpers
-    void insertHelper(Node<Key,Value>* current, const std::pair<const Key, Value> &keyValuePair);
-    int balanceHelper(Node<Key, Value>* node, bool& balanced) const;
-    void clearHelper(Node<Key,Value>* node);
-
     template<typename PPKey, typename PPValue>
     friend void prettyPrintBST(BinarySearchTree<PPKey, PPValue> & tree);
 public:
@@ -252,7 +247,9 @@ protected:
     virtual void nodeSwap( Node<Key,Value>* n1, Node<Key,Value>* n2) ;
 
     // Add helper functions here
-
+    void insertHelper(Node<Key,Value>* current, const std::pair<const Key, Value> &keyValuePair);
+    int balanceHelper(Node<Key, Value>* node, bool& balanced) const;
+    void clearHelper(Node<Key,Value>* node);
 
 protected:
     Node<Key, Value>* root_;
@@ -477,30 +474,24 @@ template<class Key, class Value>
 void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &keyValuePair)
 {
     // TODO
-    Node<Key,Value> *current = root_;
+    Node<Key,Value>* current = root_;
     insertHelper(current, keyValuePair);
 }
+
 /**
  * @brief insert helper
  * takes current node
- * 
  */
 template<typename Key, typename Value>
-void BinarySearchTree<Key, Value>::insertHelper(Node<Key,Value> * current, const std::pair<const Key, Value> &keyValuePair)
+void BinarySearchTree<Key, Value>::insertHelper(Node<Key,Value>* current, const std::pair<const Key, Value> &keyValuePair)
 {
-    // Base case: emtpy tree, create node
     if (!current) {
-        Node<Key,Value> * newNode = new Node<Key,Value>(keyValuePair.first, keyValuePair.second, NULL);
+        Node<Key, Value>* newNode = new Node<Key, Value>(keyValuePair.first, keyValuePair.second, NULL);
         root_ = newNode;
-        return;
     }
-    // if key already exists, update its value 
-    if (keyValuePair.first == current->getKey()) {
-        current->setValue(keyValuePair.second); 
-        return;
-    }
-    // Traverse left of right based on key comp
-    else if (keyValuePair.first < current->getKey()) {
+ 
+    // Case 1 : key is less than current
+    if (keyValuePair.first < current->getKey()) {
         // if current has no left child, create node
         if (!current->getLeft()) {
             Node<Key,Value> * newNode = new Node<Key,Value>(keyValuePair.first, keyValuePair.second, current);
@@ -511,7 +502,9 @@ void BinarySearchTree<Key, Value>::insertHelper(Node<Key,Value> * current, const
             insertHelper(current->getLeft(), keyValuePair);
         }
     }
-    else {
+
+    // Case 2 : key is more than current
+    else if (keyValuePair.first > current->getKey()) {
         // if current has no right child, create node
         if (!current->getRight()) {
             Node<Key,Value> * newNode = new Node<Key,Value>(keyValuePair.first, keyValuePair.second, current);
@@ -521,6 +514,9 @@ void BinarySearchTree<Key, Value>::insertHelper(Node<Key,Value> * current, const
         else {
             insertHelper(current->getRight(), keyValuePair);
         }
+    }
+    else { // if key already exists, update its value 
+        current->setValue(keyValuePair.second); 
     }
 }
 
