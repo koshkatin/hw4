@@ -474,8 +474,11 @@ template<class Key, class Value>
 void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &keyValuePair)
 {
     // TODO
-    Node<Key,Value>* current = root_;
-    insertHelper(current, keyValuePair);
+    if (!root_) {
+        root_ = new Node<Key, Value>(keyValuePair.first, keyValuePair.second, nullptr);
+        return;
+    }
+    insertHelper(root_, keyValuePair);
 }
 
 /**
@@ -483,40 +486,31 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
  * takes current node
  */
 template<typename Key, typename Value>
-void BinarySearchTree<Key, Value>::insertHelper(Node<Key,Value>* current, const std::pair<const Key, Value> &keyValuePair)
+void BinarySearchTree<Key, Value>::insertHelper(Node<Key, Value>* current, const std::pair<const Key, Value> &keyValuePair)
 {
-    if (!current) {
-        Node<Key, Value>* newNode = new Node<Key, Value>(keyValuePair.first, keyValuePair.second, NULL);
-        root_ = newNode;
-    }
- 
-    // Case 1 : key is less than current
+    // Case 1: Key is less than the current node's key
     if (keyValuePair.first < current->getKey()) {
-        // if current has no left child, create node
         if (!current->getLeft()) {
-            Node<Key,Value> * newNode = new Node<Key,Value>(keyValuePair.first, keyValuePair.second, current);
-            current->setLeft(newNode);
-        } 
-        // otherwise recurse left
-        else { 
+            // Create a new node as the left child
+            current->setLeft(new Node<Key, Value>(keyValuePair.first, keyValuePair.second, current));
+        } else {
+            // Recurse into the left subtree
             insertHelper(current->getLeft(), keyValuePair);
         }
     }
-
-    // Case 2 : key is more than current
+    // Case 2: Key is greater than the current node's key
     else if (keyValuePair.first > current->getKey()) {
-        // if current has no right child, create node
         if (!current->getRight()) {
-            Node<Key,Value> * newNode = new Node<Key,Value>(keyValuePair.first, keyValuePair.second, current);
-            current->setRight(newNode);
-        }
-        // otherwise recurse right
-        else {
+            // Create a new node as the right child
+            current->setRight(new Node<Key, Value>(keyValuePair.first, keyValuePair.second, current));
+        } else {
+            // Recurse into the right subtree
             insertHelper(current->getRight(), keyValuePair);
         }
     }
-    else { // if key already exists, update its value 
-        current->setValue(keyValuePair.second); 
+    // Case 3: Key already exists, update the value
+    else {
+        current->setValue(keyValuePair.second);
     }
 }
 
